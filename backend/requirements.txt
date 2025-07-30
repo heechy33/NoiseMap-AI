@@ -1,2 +1,7 @@
 fastapi
 uvicorn
+python-dotenv
+requests
+aiohttp
+pydantic
+starlette
