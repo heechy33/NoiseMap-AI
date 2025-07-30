@@ -113,7 +113,7 @@ const MapPage = () => {
 
       mapInstance.current.once("moveend", async () => {
         const res = await fetch(
-          `http://localhost:8000/noise?lat=${lat}&lng=${lng}&location=${encodeURIComponent(address)}`
+          `https://noisemap-ai.onrender.com/noise?lat=${lat}&lng=${lng}&location=${encodeURIComponent(address)}`
         );
         const data = await res.json();
 
