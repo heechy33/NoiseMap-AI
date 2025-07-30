@@ -65,7 +65,7 @@ const ScoreAnalysis = ({ lat, lng }) => {
 
     const fetchScores = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/score_analysis?lat=${lat}&lng=${lng}`);
+        const res = await fetch(`https://noisemap-ai.onrender.com/score_analysis?lat=${lat}&lng=${lng}`);
         const data = await res.json();
         setScores({
           nightlife: data.nightlife || 0,
