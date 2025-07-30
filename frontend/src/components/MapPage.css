@@ -1,0 +1,36 @@
+.map-container {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  background: transparent;
+}
+
+.mapbox-map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background: transparent !important;
+}
+
+.popup-wrapper {
+  position: absolute;
+  top: 100px;
+  right: 0;
+  height: calc(100% - 120px);
+  width: 400px;
+  background: white;
+  z-index: 9999;
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
