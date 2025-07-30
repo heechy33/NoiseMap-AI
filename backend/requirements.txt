@@ -5,3 +5,6 @@ requests
 aiohttp
 pydantic
 starlette
+pandas
+numpy
+scipy
