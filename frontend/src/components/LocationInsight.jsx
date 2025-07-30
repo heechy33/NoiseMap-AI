@@ -19,7 +19,7 @@ const LocationInsight = ({ lat, lng }) => {
         sessionStorage.setItem(key, JSON.stringify(data));
     })
 
-    fetch(`http://localhost:8000/location_insight?lat=${lat}&lng=${lng}`)
+    fetch(`https://noisemap-ai.onrender.com/location_insight?lat=${lat}&lng=${lng}`)
       .then((res) => res.json())
       .then((data) => {
         const parsed = {
