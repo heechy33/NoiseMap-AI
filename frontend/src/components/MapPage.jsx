@@ -43,7 +43,7 @@ const MapPage = () => {
       container: mapRef.current,
       style: "mapbox://styles/mapbox/streets-v12",
       center: [-118.2437, 34.0522],
-      zoom: 12,
+      zoom: 9,
       pitch: 60,
       bearing: -17.6,
       antialias: true,
