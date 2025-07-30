@@ -8,4 +8,5 @@ starlette
 pandas
 numpy
 scipy
+google-generativeai
 google
