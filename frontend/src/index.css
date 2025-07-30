@@ -5,7 +5,6 @@ html, body, #root {
   padding: 0;
   height: 100%;
   font-family: 'Poppins', sans-serif;
-  background: transparent !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
