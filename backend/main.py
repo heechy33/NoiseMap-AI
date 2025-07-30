@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import router as noise_router
-from dotenv import load_dotenv
 
 
 app = FastAPI()
