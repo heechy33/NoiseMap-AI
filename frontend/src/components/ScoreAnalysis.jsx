@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Loader from "./Loader";
 
-
 const DonutChart = ({ factors }) => {
   const radius = 50;
   const circumference = 2 * Math.PI * radius;
@@ -11,19 +10,11 @@ const DonutChart = ({ factors }) => {
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "20px 0" }}>
       <svg width="150" height="150" style={{ marginRight: "20px" }}>
-        <circle
-          cx="75"
-          cy="75"
-          r={radius}
-          fill="none"
-          stroke="#eee"
-          strokeWidth="16"
-        />
+        <circle cx="75" cy="75" r={radius} fill="none" stroke="#eee" strokeWidth="16" />
         {factors.map(({ value, color }, i) => {
           const arc = (value / total) * circumference;
           const dashOffset = circumference - offset;
           offset += arc;
-
           return (
             <circle
               key={i}
@@ -47,7 +38,7 @@ const DonutChart = ({ factors }) => {
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         {factors.map(({ label, color }) => (
           <div key={label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ width: 12, height: 12, backgroundColor: color, borderRadius: "50%" }}></span>
+            <span style={{ width: 12, height: 12, backgroundColor: color, borderRadius: "50%" }} />
             <span style={{ fontSize: 14 }}>{label}</span>
           </div>
         ))}
@@ -56,43 +47,41 @@ const DonutChart = ({ factors }) => {
   );
 };
 
-// ScoreAnalysis tabs
 const ScoreAnalysis = ({ lat, lng }) => {
   const [scores, setScores] = useState(null);
 
   useEffect(() => {
     if (!lat || !lng) return;
 
-    const fetchScores = async () => {
-      try {
-        const res = await fetch(`http://localhost:8000/score_analysis?lat=${lat}&lng=${lng}`);
-        const data = await res.json();
+    fetch(`http://localhost:8000/score_analysis?lat=${lat}&lng=${lng}`)
+      .then((res) => res.json())
+      .then((data) => {
         setScores({
-          nightlife: data.nightlife || 0,
           airport: data.airport || 0,
+          nightlife: data.nightlife || 0,
           train: data.train || 0,
           bus: data.bus || 0,
+          density: data.density || 0,
         });
-      } catch (err) {
-        console.error("Fetch failed:", err);
-        setScores({ nightlife: 0, airport: 0, train: 0, bus: 0 });
-      }
-    };
-
-    fetchScores();
+      })
+      .catch((err) => {
+        console.error("Score analysis fetch failed:", err);
+        setScores({ airport: 0, nightlife: 0, train: 0, bus: 0, density: 0 });
+      });
   }, [lat, lng]);
 
   if (!scores) return <Loader />;
 
   const rawFactors = [
-    { label: "Airport Noise Score", value: scores.airport, color: "#36A2EB" },
-    { label: "Nightlife Noise Score", value: scores.nightlife, color: "#e74c3c" },
-    { label: "Train Noise Score", value: scores.train, color: "#FFCE56" },
-    { label: "Bus Noise Score", value: scores.bus, color: "#66BB6A" },
+    { label: "Airport",            value: scores.airport,   color: "#f39c12" },
+    { label: "Nightlife",          value: scores.nightlife, color: "#e74c3c" },
+    { label: "Train",              value: scores.train,     color: "#2980b9" },
+    { label: "Bus",                value: scores.bus,       color: "#27ae60" },
+    { label: "Population Density", value: scores.density,   color: "#8e44ad" },
   ];
 
   const total = rawFactors.reduce((sum, f) => sum + f.value, 0);
-  const factors = rawFactors.map(f => ({
+  const factors = rawFactors.map((f) => ({
     ...f,
     percent: total === 0 ? 0 : Math.round((f.value / total) * 100),
   }));

@@ -1,3 +1,8 @@
 .env
 __pycache__/
-ML_and_helper
+*.pyc
+*.pyo
+*.pkl
+*.db
+data/
+update_checkpoint.txt

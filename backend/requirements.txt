@@ -1,2 +1,10 @@
 fastapi
-uvicorn
+uvicorn[standard]
+python-dotenv
+requests
+pandas
+scipy
+numpy
+joblib
+xgboost
+google-generativeai

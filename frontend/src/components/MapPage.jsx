@@ -7,7 +7,6 @@ import LandingPage from "./loading_page";
 import "./MapPage.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-//Rendering 3D map using mapbox
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
 const MapPage = () => {

@@ -7,7 +7,6 @@ import ScoreAnalysis from "./ScoreAnalysis";
 import LocationInsight from "./LocationInsight";
 import Loader from "./Loader";
 
-//core Location pop up page
 const LocationPopup = ({ name, score, lat, lng, loading, onClose }) => {
   const popupRef = useRef(null);
   const [position, setPosition] = useState({ x: 40, y: 100 });

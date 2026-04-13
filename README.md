@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# NoiseMap AI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive web app that lets you search any location in the world and instantly see its noise score (1–10). Designed for travelers, renters, homebuyers, and real estate agents who want to evaluate a location's noise environment before committing.
 
-## Available Scripts
+## How It Works
 
-In the project directory, you can run:
+NoiseMap AI calculates a noise score using a trained XGBoost regression model. The model was trained on 5 million crowd-sourced noise measurements from the [NoiseCapture](https://noise-planet.org/noisecapture.html) dataset (MAE: 12.6 dB, R²: 0.41) and uses five geospatial features:
 
-### `npm start`
+- **Airport proximity** — distance to the nearest large or medium airport
+- **Nightlife density** — count of bars, pubs, and nightclubs within 2 km
+- **Bus proximity** — distance to the nearest bus stop
+- **Train proximity** — distance to the nearest train or subway station
+- **Population density** — estimated density of the surrounding urban area
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Each location also receives an AI-generated summary (powered by Gemini) explaining the likely noise sources in plain language.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Project Structure
 
-### `npm test`
+```
+noisemap-ai/
+├── backend/                  # FastAPI server
+│   ├── app/
+│   │   ├── feature.py        # Geospatial feature extraction (SQLite + KDTree)
+│   │   ├── ml_model.py       # XGBoost model loading and inference
+│   │   ├── location_insight.py  # Gemini AI location summaries
+│   │   └── routes.py         # API endpoints
+│   ├── main.py
+│   ├── requirements.txt
+│   └── .env.example
+├── frontend/                 # React app
+│   └── src/
+│       └── components/
+│           ├── MapPage.jsx         # Mapbox 3D map
+│           ├── LocationPopup.jsx   # Score popup panel
+│           ├── ScoreAnalysis.jsx   # Factor breakdown chart
+│           ├── LocationInsight.jsx # AI-generated summary
+│           └── ...
+└── ml/                       # ML pipeline (data collection + training)
+    ├── data_pipeline/        # Scripts to build feature databases
+    ├── training/             # XGBoost training scripts
+    └── README.md             # Full ML setup guide
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Tech Stack
 
-### `npm run build`
+- **Frontend:** React, Mapbox GL JS, Google Maps Places API
+- **Backend:** FastAPI, XGBoost, scikit-learn, SciPy (KDTree)
+- **AI:** Google Gemini
+- **Data:** NoiseCapture (crowd-sourced noise), OpenStreetMap, OurAirports
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Prerequisites
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The backend requires three external dependencies that are not included in this repository:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **SQLite feature databases** — built from OpenStreetMap data using the scripts in `ml/data_pipeline/`. See `ml/README.md` for instructions.
+2. **Trained model file** — `shuffled_noise_model.pkl`, produced by `ml/training/train_xgboost.py`.
+3. **`worldcities.csv`** — available from [simplemaps.com/data/world-cities](https://simplemaps.com/data/world-cities).
 
-### `npm run eject`
+## Getting Started
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Backend
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+cd backend
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env with your paths and API keys
+uvicorn main:app --reload
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Frontend
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+cd frontend
+npm install
+# Create a .env file with:
+# REACT_APP_MAPBOX_TOKEN=your_mapbox_token
+# REACT_APP_GOOGLE_MAPS_API_KEY=your_google_maps_key
+npm start
+```
 
-## Learn More
+## API Endpoints
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/noise` | Returns noise score, reason, and factor breakdown |
+| GET | `/score_analysis` | Returns individual feature scores |
+| GET | `/location_insight` | Returns Gemini-generated area summary |
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Environment Variables
 
-### Code Splitting
+**Backend (`.env`):**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+| Variable | Description |
+|---|---|
+| `NOISE_DB_DIR` | Directory containing the SQLite feature databases |
+| `CITIES_CSV_PATH` | Path to `worldcities.csv` |
+| `MODEL_PATH` | Path to the trained `.pkl` model file |
+| `GEMINI_API_KEY` | Google Gemini API key |
 
-### Analyzing the Bundle Size
+**Frontend (`.env`):**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Variable | Description |
+|---|---|
+| `REACT_APP_MAPBOX_TOKEN` | Mapbox public access token |
+| `REACT_APP_GOOGLE_MAPS_API_KEY` | Google Maps API key (Places + Geocoding) |
